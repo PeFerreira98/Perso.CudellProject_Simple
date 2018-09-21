@@ -1,0 +1,113 @@
+﻿h1,
+h2,
+h3,
+p {
+    font-family: 'Roboto', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+.maindiv {
+    display: flex;
+}
+
+.cudell_logo,
+.profile_tab,
+.inner_profile_tab,
+.blur_profile_tab,
+.profile_pic,
+.active_tab,
+.active_tab_content,
+.unactive_tab,
+.search_tab,
+.message_tab,
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar {
+    min-width: 270px;
+    background-color: #2ba386;
+    float: left;
+}
+
+.content {
+    min-width: 1010px;
+    background-color: #f1f2f7;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+/**********************************************************************************/
+
+.profile_sprite,
+.bookmark_sprite,
+.message_sprite,
+.search_sprite {
+    height: 35px;
+    width: 40px;
+    object-fit: none;
+}
+
+.profile_sprite {
+    position: absolute;
+    height: 60px;
+    width: 60px;
+    object-position: -45px 0px;
+}
+
+.profile_sprite_2 {
+    position: absolute;
+    height: 40px;
+    width: 34px;
+}
+
+.bookmark_sprite {
+    height: 34px;
+    width: 16px;
+    object-position: -271px -12px;
+}
+
+.message_sprite {
+    object-position: -105px -15px;
+}
+
+    .message_sprite:hover {
+        object-position: -185px -15px;
+    }
+
+.search_sprite {
+    object-position: -150px -15px;
+}
+
+    .search_sprite:hover {
+        object-position: -230px -15px;
+    }
+
+/**********************************************************************************/
+
+.p_normal,
+.p_name,
+.p_class,
+.p_sidebar {
+    font-family: 'Roboto', sans-serif;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.p_name {
+    text-transform: uppercase;
+}
+
+.p_class {
+    font-size: 10px;
+}
+
+.p_sidebar {
+    margin-left: 28px;
+}

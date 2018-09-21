@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="~/css/main.css" />
+    <link rel="stylesheet" href="~/css/sidebar.css" />
+    <link rel="stylesheet" href="~/css/headbar.css" />
+    <link rel="stylesheet" href="~/css/table.css" />
+    <link rel="stylesheet" href="~/css/form.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300">
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/cssTransformations.js" asp-append-version="true"></script>
+</head>
+<body>
+    <div class="maindiv">
+        <div class="sidebar">
+            <a asp-area="" asp-controller="Routing" asp-action="Welcome">
+                <div class="cudell_logo">
+                    <img src="~/images/logo.png" alt="LOGO">
+                </div>
+            </a>
+
+            @await Html.PartialAsync("_LoginPartial")
+
+            <a asp-area="" asp-controller="Routing" asp-action="NotImplemented">
+                <div class="unactive_tab" id="out_unactive">
+                    <div class="p_sidebar">Outdoor Solutions</div>
+                    <div class="arrow_normal_div">
+                        <img src="~/images/seta_menu.png" alt="A">
+                    </div>
+                </div>
+            </a>
+            <div class="active_tab" id="out_active">
+                <div class="active_tab_content">
+                    <div class="arrow_active_div">
+                        <img src="~/images/seta_menu.png" alt="A">
+                    </div>
+                    <div class="p_normal">Outdoor Solutions</div>
+                </div>
+                <div class="active_tab_bookmark">
+                    <img class="bookmark_sprite" src="~/images/sprite.png" alt="B">
+                </div>
+            </div>
+
+            <a asp-area="" asp-controller="Routing" asp-action="Table">
+                <div class="unactive_tab" id="eng_unactive">
+                    <div class="p_sidebar">Eng e Servicos</div>
+                    <div class="arrow_normal_div">
+                        <img src="~/images/seta_menu.png" alt="A">
+                    </div>
+                </div>
+            </a>
+            <div class="active_tab" id="eng_active">
+                <div class="active_tab_content">
+                    <div class="arrow_active_div">
+                        <img src="~/images/seta_menu.png" alt="A">
+                    </div>
+                    <div class="p_normal">Eng e Servicos</div>
+                </div>
+                <div class="active_tab_bookmark">
+                    <img class="bookmark_sprite" src="~/images/sprite.png" alt="B">
+                </div>
+            </div>
+
+            <a asp-area="" asp-controller="Routing" asp-action="NotImplemented">
+                <div class="unactive_tab" id="din_unactive">
+                    <div class="p_sidebar">Dinamic</div>
+                    <div class="arrow_normal_div">
+                        <img src="~/images/seta_menu.png" alt="A">
+                    </div>
+                </div>
+            </a>
+            <div class="active_tab" id="out_active">
+                <div class="active_tab_content">
+                    <div class="arrow_active_div">
+                        <img src="~/images/seta_menu.png" alt="A">
+                    </div>
+                    <div class="p_normal">Dinamic</div>
+                </div>
+                <div class="active_tab_bookmark">
+                    <img class="bookmark_sprite" src="~/images/sprite.png" alt="B">
+                </div>
+            </div>
+
+            <a asp-area="" asp-controller="Routing" asp-action="NotImplemented">
+                <div class="unactive_tab" id="inP_unactive">
+                    <div class="p_sidebar">InPlub</div>
+                    <div class="arrow_normal_div">
+                        <img src="~/images/seta_menu.png" alt="A">
+                    </div>
+                </div>
+            </a>
+            <div class="active_tab" id="out_active">
+                <div class="active_tab_content">
+                    <div class="arrow_active_div">
+                        <img src="~/images/seta_menu.png" alt="A">
+                    </div>
+                    <div class="p_normal">InPlub</div>
+                </div>
+                <div class="active_tab_bookmark">
+                    <img class="bookmark_sprite" src="~/images/sprite.png" alt="B">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="content">
+            <div class="headbar">
+                <a asp-area="" asp-controller="Routing" asp-action="NotImplemented">
+                    <div class="message_tab" id="message_tab_unactive">
+                        <img class="message_sprite" src="~/images/sprite.png" alt="MSG">
+                    </div>
+                </a>
+                <div class="message_tab" id="message_tab_active">
+                    <img class="message_sprite" src="~/images/sprite.png" alt="MSG">
+                </div>
+
+                <div class="search_tab" id="search_div_col" onclick="extendSearch()">
+                    <img class="search_sprite" src="~/images/sprite.png" alt="SCH">
+                </div>
+
+                <div class="search_tab_extended" id="search_div_ext">
+                    <div class="search_tab_extended_bar">
+                        <input class="global_filter" id="global_filter" type="text" placeholder="Procurar...">
+                    </div>
+
+                    <div class="search_tab_extended_icon" onclick="colapseSearch()">
+                        <img class="search_sprite" src="~/images/sprite.png" alt="SCH">
+                    </div>
+                </div>
+            </div>
+
+            @RenderBody()
+
+        </div>
+    </div>
+</body>
+</html>

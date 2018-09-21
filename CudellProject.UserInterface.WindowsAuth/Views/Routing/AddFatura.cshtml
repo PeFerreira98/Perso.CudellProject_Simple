@@ -1,0 +1,39 @@
+﻿@model CudellProject.Data.Models.ViewModels.AddFaturaViewModel
+
+<h4>AddFaturaViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddFatura" asp-controller="Fatura" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="DataFatura" class="control-label"></label>
+                <input asp-for="DataFatura" class="form-control" required />
+                <span asp-validation-for="DataFatura" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DataVencimento" class="control-label"></label>
+                <input asp-for="DataVencimento" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+                <span asp-validation-for="DataVencimento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Valor" class="control-label"></label>
+                <input asp-for="Valor" class="form-control" type="number" step="0.01" min="0.01" required />
+                <span asp-validation-for="Valor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Fornecedor" class="control-label"></label>
+                <select asp-for="Fornecedor" asp-items="Model.Fornecedores" class="form-control" required></select>
+                <span asp-validation-for="Fornecedor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Table">Back to List</a>
+</div>
+

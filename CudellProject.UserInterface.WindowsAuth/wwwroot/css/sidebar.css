@@ -1,0 +1,55 @@
+﻿.cudell_logo {
+    height: 76px;
+    background-color: #282a33;
+}
+
+.profile_tab {
+    height: 118px;
+    background: #18191f;
+}
+
+.blur_profile_tab {
+    position: absolute;
+    height: 118px;
+    width: 270px;
+    box-shadow: 0px 1px 3px #000;
+    opacity: 0.5;
+}
+
+.inner_profile_tab {
+    position: absolute;
+    height: 118px;
+    flex-direction: row;
+}
+
+.profile_pic {
+    height: 56px;
+    width: 56px;
+    margin-right: 10px;
+}
+
+.unactive_tab,
+.active_tab {
+    height: 70px;
+    background-color: #2ba386;
+    justify-content: space-between;
+}
+
+    .unactive_tab:hover {
+        background-color: #117c68;
+    }
+
+.arrow_normal_div {
+    margin-right: 25px;
+}
+
+.active_tab {
+    display: none;
+    background-color: #117c68;
+    margin-left: 0%;
+}
+
+.arrow_active_div {
+    margin-left: 28px;
+    margin-right: 10px;
+}

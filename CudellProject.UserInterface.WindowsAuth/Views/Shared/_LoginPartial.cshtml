@@ -1,0 +1,32 @@
+﻿@if (User.Identity.IsAuthenticated)
+{
+<div class="profile_tab">
+    <div class="blur_profile_tab"></div>
+    <div class="inner_profile_tab">
+        <div class="profile_pic">
+            <img class="profile_sprite" src="~/images/sprite.png" alt="PRF">
+            <img class="profile_sprite_2" src="~/images/clarity-shutdown-icon.png" alt="PRF">
+        </div>
+        <div class="profile_text">
+            <div class="p_name">@User.Identity.Name.Split('\\')[1]</div>
+            <div class="p_class"><b>@User.Identity.AuthenticationType</b></div>
+        </div>
+    </div>
+</div>
+}
+else
+{
+<div class="profile_tab">
+    <div class="blur_profile_tab"></div>
+    <div class="inner_profile_tab">
+        <div class="profile_pic">
+            <img class="profile_sprite" src="~/images/sprite.png" alt="PRF">
+            <img class="profile_sprite_2" src="~/images/clarity-shutdown-icon.png" alt="PRF">
+        </div>
+        <div>
+            <div class="p_name">Unknown User</div>
+            <div class="p_class"><b>Unknown</b></div>
+        </div>
+    </div>
+</div>
+}

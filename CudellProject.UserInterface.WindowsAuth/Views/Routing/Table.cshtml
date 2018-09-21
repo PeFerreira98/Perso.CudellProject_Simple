@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<script type="text/javascript">
+    $(document).ready(engPage());
+</script>
+
+@*<img style="position: absolute; margin-left: 100px;" src="/images/loading.gif">*@
+
+<div class="table_div">
+    <table id="optionsTable" class="table">
+        <tr>
+            <td class="t_head t_show">
+                Mostrar
+                <select id="sel_page_res" class="sel_page_res">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+                Resultados
+            </td>
+
+            <td class="t_head t_add"><a asp-area="" asp-controller="Routing" asp-action="AddFatura">+ Adicionar</a></td>
+        </tr>
+    </table>
+    <table id="faturasPendentesTable" class="table">
+        <thead>
+            <tr>
+                <td class="t_title">Faturas Pendentes</td>
+            </tr>
+            <tr>
+                <td class="t_head t_head_first">Fornecedor</td>
+                <td class="t_head">FaturaID</td>
+                <td class="t_head">Data Fatura</td>
+                <td class="t_head">Data Vencimento</td>
+                <td class="t_head">Valor</td>
+                <td class="t_head">Opcoes</td>
+            </tr>
+        </thead>
+    </table>
+    <table id="ownFaturasTable" class="table">
+        <thead>
+            <tr>
+                <td class="t_title">As Minhas Faturas</td>
+            </tr>
+            <tr>
+                <td class="t_head t_head_first">Fornecedor</td>
+                <td class="t_head">Data Fatura</td>
+                <td class="t_head">Data Vencimento</td>
+                <td class="t_head">Valor</td>
+                <td class="t_head">Estado</td>
+            </tr>
+        </thead>
+    </table>
+</div>
