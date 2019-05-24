@@ -12,7 +12,7 @@ namespace CudellProject.Data.xUnitTest.Models
             var dataFatura = new DateTime();
             var dataVencimento = new DateTime();
             var valor = Convert.ToDecimal(180.33);
-            var fornecedorID = (short) 1;
+            var fornecedorID = (short)1;
             var insertUser = "TestUser";
             var responsavelFatura = "TestUser";
 
@@ -50,7 +50,7 @@ namespace CudellProject.Data.xUnitTest.Models
             var dataFatura = new DateTime();
             var dataVencimento = new DateTime();
             var valor = Convert.ToDecimal(180.33);
-            var fornecedorID = (short) 1;
+            var fornecedorID = (short)1;
             var responsavelFatura = "TestUser";
 
             Action argumentException = () => new Fatura(dataFatura, dataVencimento, valor, fornecedorID, null, responsavelFatura);

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CudellProject.Data.Models
 {
@@ -20,12 +17,12 @@ namespace CudellProject.Data.Models
         public string ResponsavelFatura { get; set; }
         public Int16 EstadoFaturaID { get; set; }
         public EstadoFatura EstadoFatura { get; set; }
-        
+
         protected Fatura() { } //Context Use Only
 
         public Fatura(DateTime dataFatura, DateTime dataVencimento, decimal valor, short fornecedorID, string insertUser, string responsavelFatura)
         {
-            if(fornecedorID <= 0) throw new ArgumentException("fornecedorID is invalid");
+            if (fornecedorID <= 0) throw new ArgumentException("fornecedorID is invalid");
             DataFatura = dataFatura;
             DataVencimento = dataVencimento;
             Valor = valor;

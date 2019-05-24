@@ -1,15 +1,11 @@
 using CudellProject.Data.Contexts;
 using CudellProject.Data.Models;
 using CudellProject.Services.Controllers;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace CudellProject.Services.xUnitTest.Controllers
@@ -63,7 +59,7 @@ namespace CudellProject.Services.xUnitTest.Controllers
 
             var model = okObjectResult.Value as EstadoFatura;
             Assert.NotNull(model);
-            
+
             Assert.Equal(1, model.EstadoFaturaID);
             Assert.Equal("TesteDescritivo1", model.DescritivoEstadoFatura);
         }

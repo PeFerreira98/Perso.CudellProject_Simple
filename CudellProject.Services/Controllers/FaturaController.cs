@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CudellProject.Data.Contexts;
-using CudellProject.Data.DTOs;
+﻿using CudellProject.Data.Contexts;
 using CudellProject.Data.Models;
 using CudellProject.Data.Models.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CudellProject.Services.Controllers
 {
@@ -42,7 +40,7 @@ namespace CudellProject.Services.Controllers
                 var dataFatura = DateTime.ParseExact(faturaModel.DataFatura, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
                 var dataVencimento = DateTime.ParseExact(faturaModel.DataVencimento, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
 
-                if(dataVencimento < dataFatura || dataVencimento < DateTime.Now || dataFatura < DateTime.Now) return RedirectToAction("Error", "Routing");
+                if (dataVencimento < dataFatura || dataVencimento < DateTime.Now || dataFatura < DateTime.Now) return RedirectToAction("Error", "Routing");
 
                 var newFatura = new Fatura(
                     dataFatura,
@@ -57,6 +55,7 @@ namespace CudellProject.Services.Controllers
             }
             catch (Exception e)
             {
+                Debug.WriteLine("Ex:->" + e);
                 throw;
             }
         }
@@ -87,6 +86,7 @@ namespace CudellProject.Services.Controllers
             }
             catch (Exception e)
             {
+                Debug.WriteLine("Ex:->" + e);
                 throw;
             }
         }
@@ -150,11 +150,11 @@ namespace CudellProject.Services.Controllers
             CreatedAtAction("GetFatura", new { id = fatura.FaturaID }, fatura);
 
             return await new AuditController(_context).PostAudit(new Audit()
-                {
-                    OperationTimeStamp = DateTime.Now,
-                    Operation = "Operation:Create; Entity:Fatura, EntityID: " + fatura.FaturaID,
-                    Username = User.Identity.Name.Split('\\')[1]
-                });
+            {
+                OperationTimeStamp = DateTime.Now,
+                Operation = "Operation:Create; Entity:Fatura, EntityID: " + fatura.FaturaID,
+                Username = User.Identity.Name.Split('\\')[1]
+            });
         }
 
         private bool FaturaExists(long id)

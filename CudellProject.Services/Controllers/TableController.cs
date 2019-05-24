@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CudellProject.Data.Contexts;
+﻿using CudellProject.Data.Contexts;
 using CudellProject.Data.DTOs;
 using CudellProject.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CortesProject.Services.Controllers
 {
@@ -25,7 +25,7 @@ namespace CortesProject.Services.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> LoadFirstTableData()
+        public IActionResult LoadFirstTableData()
         {
             _logger.LogInformation("TableController - LoadFirstTableData - Method Call");
 
@@ -44,7 +44,7 @@ namespace CortesProject.Services.Controllers
                 int end = length != null ? Convert.ToInt32(length) : 0;
 
                 _logger.LogInformation("TableController - LoadFirstTableData - Variables Successfully Instantiated");
-                
+
                 if (!string.IsNullOrEmpty(searchValue) && !string.IsNullOrEmpty(orderColumn))
                 {
                     _logger.LogInformation("TableController - LoadFirstTableData - Entering Sorted Search (with value = " + searchValue + " and " + orderColumn + " and " + orderDirection + ")");
@@ -52,7 +52,7 @@ namespace CortesProject.Services.Controllers
                     data = ParsingDataResultFPDTO(faturas);
                     return Json(new { draw = draw, recordsFiltered = firstTableLength, recordsTotal = firstTableLength, data = data });
                 }
-                
+
                 if (!string.IsNullOrEmpty(searchValue))
                 {
                     _logger.LogInformation("TableController - LoadFirstTableData - Entering Search (with value = " + searchValue + ")");
@@ -81,7 +81,7 @@ namespace CortesProject.Services.Controllers
             }
         }
 
-        public async Task<IActionResult> LoadSecondTableData()
+        public IActionResult LoadSecondTableData()
         {
             _logger.LogInformation("TableController - LoadSecondTableData - Method Call");
 
@@ -124,7 +124,7 @@ namespace CortesProject.Services.Controllers
                     data = ParsingDataResultOFDTO(faturas);
                     return Json(new { draw = draw, recordsFiltered = secondTableLength, data = data });
                 }
-                
+
                 _logger.LogInformation("TableController - LoadSecondTableData - Returning all Results");
                 faturas = GetCurrentUserFaturas(currentUser, start, end).Result;
                 data = ParsingDataResultOFDTO(faturas);
@@ -718,7 +718,7 @@ namespace CortesProject.Services.Controllers
                                                             .Take(end)
                                                             .ToListAsync();
             }
-            
+
             return await _context.Fatura
                         .Include(i => i.Fornecedor)
                         .Where(fatura => fatura.AlterUser == currentUser
@@ -755,6 +755,6 @@ namespace CortesProject.Services.Controllers
 
             return data;
         }
-        
+
     }
 }

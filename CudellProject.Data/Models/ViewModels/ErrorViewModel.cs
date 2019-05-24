@@ -1,5 +1,3 @@
-using System;
-
 namespace CudellProject.Data.Models.ViewModels
 {
     public class ErrorViewModel

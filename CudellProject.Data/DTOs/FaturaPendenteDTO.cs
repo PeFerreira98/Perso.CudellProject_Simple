@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace CudellProject.Data.DTOs
 {
@@ -17,7 +12,7 @@ namespace CudellProject.Data.DTOs
 
         public FaturaPendenteDTO(long faturaID, string fornecedor, DateTime dataFatura, DateTime dataVencimento, Double valor)
         {
-            if(faturaID <= 0) throw new ArgumentException("FaturaID is " + faturaID);
+            if (faturaID <= 0) throw new ArgumentException("FaturaID is " + faturaID);
             FaturaID = faturaID;
             Fornecedor = fornecedor ?? throw new ArgumentNullException(nameof(fornecedor));
             DataFatura = dataFatura.ToString("dd-MM-yyyy");

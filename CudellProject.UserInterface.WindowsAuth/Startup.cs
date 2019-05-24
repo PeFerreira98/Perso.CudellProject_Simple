@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CudellProject.Data.Contexts;
+﻿using CudellProject.Data.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Server.HttpSys;
-using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +27,7 @@ namespace CudellProject.UserInterface.WindowsAuth
 
             var connection = Configuration.GetConnectionString("DemoDbConnection");
             services.AddDbContext<DemoDbContext>(options => options.UseSqlServer(connection, b => b.UseRowNumberForPaging()));
-            
+
             services.AddMvc();
         }
 
