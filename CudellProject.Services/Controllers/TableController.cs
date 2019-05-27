@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace CortesProject.Services.Controllers
 {
@@ -31,9 +32,9 @@ namespace CortesProject.Services.Controllers
 
             try
             {
-                var currentUser = User.Identity.Name.Split('\\')[1];
-                var data = new List<FaturaPendenteDTO>();
-                var faturas = new List<Fatura>();
+                string currentUser = User.Identity.Name.Split('\\')[1];
+                List<FaturaPendenteDTO> data = new List<FaturaPendenteDTO>();
+                List<Fatura> faturas = new List<Fatura>();
                 var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
                 var searchValue = Request.Form["search[value]"].FirstOrDefault();
                 var orderDirection = Request.Form["order[0][dir]"].FirstOrDefault();
@@ -50,7 +51,7 @@ namespace CortesProject.Services.Controllers
                     _logger.LogInformation("TableController - LoadFirstTableData - Entering Sorted Search (with value = " + searchValue + " and " + orderColumn + " and " + orderDirection + ")");
                     faturas = GetCurrentUserFaturas(currentUser, "Por Aprovar", start, end, searchValue, orderColumn, orderDirection).Result;
                     data = ParsingDataResultFPDTO(faturas);
-                    return Json(new { draw = draw, recordsFiltered = firstTableLength, recordsTotal = firstTableLength, data = data });
+                    return Json((draw, recordsFiltered: firstTableLength, recordsTotal: firstTableLength, data: data));
                 }
 
                 if (!string.IsNullOrEmpty(searchValue))
@@ -58,7 +59,7 @@ namespace CortesProject.Services.Controllers
                     _logger.LogInformation("TableController - LoadFirstTableData - Entering Search (with value = " + searchValue + ")");
                     faturas = GetCurrentUserFaturas(currentUser, "Por Aprovar", start, end, searchValue).Result;
                     data = ParsingDataResultFPDTO(faturas);
-                    return Json(new { draw = draw, recordsFiltered = firstTableLength, recordsTotal = firstTableLength, data = data });
+                    return Json((draw: draw, recordsFiltered: firstTableLength, recordsTotal: firstTableLength, data: data));
                 }
 
                 if (!string.IsNullOrEmpty(orderColumn))
@@ -66,13 +67,13 @@ namespace CortesProject.Services.Controllers
                     _logger.LogInformation("TableController - LoadFirstTableData - Entering Sort (with value = " + orderColumn + " and " + orderDirection + ")");
                     faturas = GetCurrentUserFaturas(currentUser, "Por Aprovar", start, end, orderColumn, orderDirection).Result;
                     data = ParsingDataResultFPDTO(faturas);
-                    return Json(new { draw = draw, recordsFiltered = firstTableLength, recordsTotal = firstTableLength, data = data });
+                    return Json((draw: draw, recordsFiltered: firstTableLength, recordsTotal: firstTableLength, data: data));
                 }
 
                 _logger.LogInformation("TableController - LoadFirstTableData - Returning all Results");
                 faturas = GetCurrentUserFaturas(currentUser, "Por Aprovar", start, end).Result;
                 data = ParsingDataResultFPDTO(faturas);
-                return Json(new { draw = draw, recordsFiltered = firstTableLength, recordsTotal = firstTableLength, data = data });
+                return Json((draw: draw, recordsFiltered: firstTableLength, recordsTotal: firstTableLength, data: data));
             }
             catch (Exception e)
             {
@@ -87,9 +88,9 @@ namespace CortesProject.Services.Controllers
 
             try
             {
-                var currentUser = User.Identity.Name.Split('\\')[1];
-                var data = new List<OwnFaturaDTO>();
-                var faturas = new List<Fatura>();
+                string currentUser = User.Identity.Name.Split('\\')[1];
+                List<OwnFaturaDTO> data = new List<OwnFaturaDTO>();
+                List<Fatura> faturas = new List<Fatura>();
                 var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
                 var searchValue = Request.Form["search[value]"].FirstOrDefault();
                 var orderDirection = Request.Form["order[0][dir]"].FirstOrDefault();
@@ -106,7 +107,7 @@ namespace CortesProject.Services.Controllers
                     _logger.LogInformation("TableController - LoadSecondTableData - Entering Sorted Search (with value = " + searchValue + " and " + orderColumn + " and " + orderDirection + ")");
                     faturas = GetCurrentUserFaturas(currentUser, start, end, searchValue, orderColumn, orderDirection).Result;
                     data = ParsingDataResultOFDTO(faturas);
-                    return Json(new { draw = draw, recordsFiltered = secondTableLength, data = data });
+                    return Json((draw: draw, recordsFiltered: secondTableLength, data: data));
                 }
 
                 if (!string.IsNullOrEmpty(searchValue))
@@ -114,7 +115,7 @@ namespace CortesProject.Services.Controllers
                     _logger.LogInformation("TableController - LoadSecondTableData - Entering Search (with value = " + searchValue + ")");
                     faturas = GetCurrentUserFaturas(currentUser, start, end, searchValue).Result;
                     data = ParsingDataResultOFDTO(faturas);
-                    return Json(new { draw = draw, recordsFiltered = secondTableLength, data = data });
+                    return Json((draw: draw, recordsFiltered: secondTableLength, data: data));
                 }
 
                 if (!string.IsNullOrEmpty(orderColumn))
@@ -122,13 +123,13 @@ namespace CortesProject.Services.Controllers
                     _logger.LogInformation("TableController - LoadSecondTableData - Entering Sort (with value = " + orderColumn + " and " + orderDirection + ")");
                     faturas = GetCurrentUserFaturas(currentUser, start, end, orderColumn, orderDirection).Result;
                     data = ParsingDataResultOFDTO(faturas);
-                    return Json(new { draw = draw, recordsFiltered = secondTableLength, data = data });
+                    return Json((draw: draw, recordsFiltered: secondTableLength, data: data));
                 }
 
                 _logger.LogInformation("TableController - LoadSecondTableData - Returning all Results");
                 faturas = GetCurrentUserFaturas(currentUser, start, end).Result;
                 data = ParsingDataResultOFDTO(faturas);
-                return Json(new { draw = draw, recordsFiltered = secondTableLength, data = data });
+                return Json((draw: draw, recordsFiltered: secondTableLength, data: data));
             }
             catch (Exception e)
             {
@@ -171,7 +172,9 @@ namespace CortesProject.Services.Controllers
             secondTableLength = await _context.Fatura.Where(fatura => fatura.AlterUser == currentUser).CountAsync();
             if (orderColumn == "fornecedor")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser)
@@ -179,8 +182,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
 
-                if (orderDirection == "desc") return await _context.Fatura
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser)
@@ -188,10 +194,13 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
             if (orderColumn == "dataFatura")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser)
@@ -199,8 +208,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
 
-                if (orderDirection == "desc") return await _context.Fatura
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser)
@@ -208,10 +220,13 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
             if (orderColumn == "dataVencimento")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser)
@@ -219,8 +234,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
 
-                if (orderDirection == "desc") return await _context.Fatura
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser)
@@ -228,10 +246,13 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
             if (orderColumn == "valor")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser)
@@ -239,8 +260,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
 
-                if (orderDirection == "desc") return await _context.Fatura
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser)
@@ -248,10 +272,13 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
             if (orderColumn == "estado")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser)
@@ -259,8 +286,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
 
-                if (orderDirection == "desc") return await _context.Fatura
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser)
@@ -268,6 +298,7 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
 
             return await _context.Fatura
@@ -283,7 +314,9 @@ namespace CortesProject.Services.Controllers
             secondTableLength = await _context.Fatura.Where(fatura => fatura.AlterUser == currentUser && (fatura.Fornecedor.DescritivoFornecedor.Contains(searchValue) || fatura.Valor.ToString().Contains(searchValue) || fatura.EstadoFatura.DescritivoEstadoFatura.Contains(searchValue))).CountAsync();
             if (orderColumn == "fornecedor")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser
@@ -296,8 +329,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
 
-                if (orderDirection == "desc") return await _context.Fatura
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser
@@ -310,10 +346,13 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
             if (orderColumn == "dataFatura")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser
@@ -326,8 +365,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
 
-                if (orderDirection == "desc") return await _context.Fatura
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser
@@ -340,10 +382,13 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
             if (orderColumn == "dataVencimento")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser
@@ -356,8 +401,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
 
-                if (orderDirection == "desc") return await _context.Fatura
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser
@@ -370,10 +418,13 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
             if (orderColumn == "valor")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser
@@ -386,8 +437,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
 
-                if (orderDirection == "desc") return await _context.Fatura
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser
@@ -400,10 +454,13 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
             if (orderColumn == "estado")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser
@@ -416,8 +473,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
 
-                if (orderDirection == "desc") return await _context.Fatura
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Include(fatura => fatura.EstadoFatura)
                                                             .Where(fatura => fatura.AlterUser == currentUser
@@ -430,6 +490,7 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
 
             return await _context.Fatura
@@ -478,7 +539,9 @@ namespace CortesProject.Services.Controllers
             firstTableLength = await _context.Fatura.Where(fatura => fatura.AlterUser == currentUser && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura).CountAsync();
             if (orderColumn == "fornecedor")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura)
@@ -486,7 +549,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
-                if (orderDirection == "desc") return await _context.Fatura
+                }
+
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura)
@@ -494,10 +561,13 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
             if (orderColumn == "dataFatura")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura)
@@ -505,7 +575,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
-                if (orderDirection == "desc") return await _context.Fatura
+                }
+
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura)
@@ -513,10 +587,13 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
             if (orderColumn == "dataVencimento")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura)
@@ -524,7 +601,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
-                if (orderDirection == "desc") return await _context.Fatura
+                }
+
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura)
@@ -532,10 +613,13 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
             if (orderColumn == "valor")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura)
@@ -543,7 +627,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
-                if (orderDirection == "desc") return await _context.Fatura
+                }
+
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura)
@@ -551,10 +639,13 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
             if (orderColumn == "estado")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura)
@@ -562,7 +653,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
-                if (orderDirection == "desc") return await _context.Fatura
+                }
+
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura)
@@ -570,6 +665,7 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
 
             return await _context.Fatura
@@ -585,7 +681,9 @@ namespace CortesProject.Services.Controllers
             firstTableLength = await _context.Fatura.Where(fatura => fatura.AlterUser == currentUser && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura && (fatura.Fornecedor.DescritivoFornecedor.Contains(searchValue) || fatura.Valor.ToString().Contains(searchValue))).CountAsync();
             if (orderColumn == "fornecedor")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura
@@ -597,7 +695,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
-                if (orderDirection == "desc") return await _context.Fatura
+                }
+
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura
@@ -609,10 +711,13 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
             if (orderColumn == "dataFatura")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura
@@ -624,7 +729,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
-                if (orderDirection == "desc") return await _context.Fatura
+                }
+
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura
@@ -636,10 +745,13 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
             if (orderColumn == "dataVencimento")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura
@@ -651,7 +763,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
-                if (orderDirection == "desc") return await _context.Fatura
+                }
+
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura
@@ -663,10 +779,13 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
             if (orderColumn == "valor")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura
@@ -678,7 +797,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
-                if (orderDirection == "desc") return await _context.Fatura
+                }
+
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura
@@ -690,10 +813,13 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
             if (orderColumn == "estado")
             {
-                if (orderDirection == "asc") return await _context.Fatura
+                if (orderDirection == "asc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura
@@ -705,7 +831,11 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
-                if (orderDirection == "desc") return await _context.Fatura
+                }
+
+                if (orderDirection == "desc")
+                {
+                    return await _context.Fatura
                                                             .Include(i => i.Fornecedor)
                                                             .Where(fatura => fatura.AlterUser == currentUser
                                                                 && fatura.EstadoFatura.DescritivoEstadoFatura == estadoFatura
@@ -717,6 +847,7 @@ namespace CortesProject.Services.Controllers
                                                             .Skip(start)
                                                             .Take(end)
                                                             .ToListAsync();
+                }
             }
 
             return await _context.Fatura
@@ -735,7 +866,7 @@ namespace CortesProject.Services.Controllers
 
         private List<FaturaPendenteDTO> ParsingDataResultFPDTO(List<Fatura> faturas)
         {
-            var data = new List<FaturaPendenteDTO>();
+            List<FaturaPendenteDTO> data = new List<FaturaPendenteDTO>();
 
             foreach (Fatura fatura in faturas)
             {
@@ -746,7 +877,7 @@ namespace CortesProject.Services.Controllers
         }
         private List<OwnFaturaDTO> ParsingDataResultOFDTO(List<Fatura> faturas)
         {
-            var data = new List<OwnFaturaDTO>();
+            List<OwnFaturaDTO> data = new List<OwnFaturaDTO>();
 
             foreach (Fatura fatura in faturas)
             {

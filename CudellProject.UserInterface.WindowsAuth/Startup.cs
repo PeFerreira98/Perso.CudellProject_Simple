@@ -1,10 +1,9 @@
-﻿using CudellProject.Data.Contexts;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace CudellProject.UserInterface.WindowsAuth
 {
@@ -20,40 +19,40 @@ namespace CudellProject.UserInterface.WindowsAuth
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.Configure<IISOptions>(options => options.AutomaticAuthentication = true);
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
 
-            //services.AddAuthentication(IISDefaults.AuthenticationScheme);
-            //services.AddAuthentication(HttpSysDefaults.AuthenticationScheme);
 
-            var connection = Configuration.GetConnectionString("DemoDbConnection");
-            services.AddDbContext<DemoDbContext>(options => options.UseSqlServer(connection, b => b.UseRowNumberForPaging()));
-
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseExceptionHandler("/Routing/Error");
+                app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
             }
 
-            app.UseStatusCodePagesWithReExecute("/Routing/Error");
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
-
-            loggerFactory.AddFile("../Logs/CudellProjectLogs-{Date}.txt");
+            app.UseCookiePolicy();
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Routing}/{action=Welcome}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

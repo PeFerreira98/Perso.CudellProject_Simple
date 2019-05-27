@@ -1,5 +1,4 @@
-﻿using CudellProject.Data.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace CudellProject.Data.Contexts
 {

@@ -6,11 +6,12 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace CudellProject.Services.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Fornecedor")]
+    [Microsoft.AspNetCore.Mvc.Route("api/Fornecedor")]
     public class FornecedorController : Controller
     {
         private readonly DemoDbContext _context;
@@ -23,7 +24,7 @@ namespace CudellProject.Services.Controllers
         }
 
         // GET: api/Fornecedor
-        [HttpGet]
+        [Microsoft.AspNetCore.Mvc.HttpGet]
         public IEnumerable<Fornecedor> GetFornecedor()
         {
             _logger.LogInformation("FornecedorController - GetFornecedor - Method Call");
@@ -32,7 +33,7 @@ namespace CudellProject.Services.Controllers
         }
 
         // GET: api/Fornecedor/5
-        [HttpGet("{id}")]
+        [Microsoft.AspNetCore.Mvc.HttpGet("{id}")]
         public async Task<IActionResult> GetFornecedor([FromRoute] short id)
         {
             _logger.LogInformation("FornecedorController - GetFornecedor (with id = " + id + " - Method Call");
@@ -53,7 +54,7 @@ namespace CudellProject.Services.Controllers
         }
 
         // GET: api/Fornecedor/name
-        [HttpGet("{name}")]
+        [Microsoft.AspNetCore.Mvc.HttpGet("{name}")]
         public async Task<IActionResult> GetFornecedor([FromRoute] string name)
         {
             _logger.LogInformation("FornecedorController - GetFornecedor (with name = " + name + " - Method Call");
@@ -74,7 +75,7 @@ namespace CudellProject.Services.Controllers
         }
 
         // PUT: api/Fornecedor/5
-        [HttpPut("{id}")]
+        [Microsoft.AspNetCore.Mvc.HttpPut("{id}")]
         public async Task<IActionResult> PutFornecedor([FromRoute] short id, [FromBody] Fornecedor fornecedor)
         {
             _logger.LogInformation("FornecedorController - PutFornecedor - Method Call");
@@ -111,7 +112,7 @@ namespace CudellProject.Services.Controllers
         }
 
         // POST: api/Fornecedor
-        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.HttpPost]
         public async Task<IActionResult> PostFornecedor([FromBody] Fornecedor fornecedor)
         {
             _logger.LogInformation("FornecedorController - PostFornecedor - Method Call");
@@ -128,7 +129,7 @@ namespace CudellProject.Services.Controllers
         }
 
         // DELETE: api/Fornecedor/5
-        [HttpDelete("{id}")]
+        [Microsoft.AspNetCore.Mvc.HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFornecedor([FromRoute] short id)
         {
             _logger.LogInformation("FornecedorController - DeleteFornecedor - Method Call");

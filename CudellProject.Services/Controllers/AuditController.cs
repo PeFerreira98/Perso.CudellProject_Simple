@@ -2,11 +2,12 @@
 using CudellProject.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace CudellProject.Services.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Audit")]
+    [Microsoft.AspNetCore.Mvc.Route("api/Audit")]
     public class AuditController : Controller
     {
         private readonly DemoDbContext _context;
@@ -17,7 +18,7 @@ namespace CudellProject.Services.Controllers
         }
 
         // POST: api/Audit
-        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.HttpPost]
         public async Task<IActionResult> PostAudit([FromBody] Audit audit)
         {
             if (!ModelState.IsValid)

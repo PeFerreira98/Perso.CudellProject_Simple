@@ -22,7 +22,11 @@ namespace CudellProject.Data.Models
 
         public Fatura(DateTime dataFatura, DateTime dataVencimento, decimal valor, short fornecedorID, string insertUser, string responsavelFatura)
         {
-            if (fornecedorID <= 0) throw new ArgumentException("fornecedorID is invalid");
+            if (fornecedorID <= 0)
+            {
+                throw new ArgumentException("fornecedorID is invalid");
+            }
+
             DataFatura = dataFatura;
             DataVencimento = dataVencimento;
             Valor = valor;

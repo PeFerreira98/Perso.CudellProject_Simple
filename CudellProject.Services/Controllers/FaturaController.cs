@@ -8,11 +8,12 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace CudellProject.Services.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Fatura")]
+    [Microsoft.AspNetCore.Mvc.Route("api/Fatura")]
     public class FaturaController : Controller
     {
         private readonly DemoDbContext _context;
@@ -24,25 +25,34 @@ namespace CudellProject.Services.Controllers
             _logger = logger;
         }
 
-        [HttpPost("addFatura")]
+        [Microsoft.AspNetCore.Mvc.HttpPost("addFatura")]
         public async Task<IActionResult> AddFatura(AddFaturaViewModel faturaModel)
         {
             if (string.IsNullOrEmpty(faturaModel.DataFatura)
                 || string.IsNullOrEmpty(faturaModel.DataVencimento)
                 || string.IsNullOrEmpty(faturaModel.Fornecedor)
-                || faturaModel.Valor <= 0.00) return BadRequest();
+                || faturaModel.Valor <= 0.00)
+            {
+                return BadRequest();
+            }
 
             Fornecedor fornecedor = await GetFornecedorByName(faturaModel.Fornecedor);
-            if (fornecedor == null) return NotFound();
+            if (fornecedor == null)
+            {
+                return NotFound();
+            }
 
             try
             {
-                var dataFatura = DateTime.ParseExact(faturaModel.DataFatura, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
-                var dataVencimento = DateTime.ParseExact(faturaModel.DataVencimento, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                DateTime dataFatura = DateTime.ParseExact(faturaModel.DataFatura, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                DateTime dataVencimento = DateTime.ParseExact(faturaModel.DataVencimento, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
 
-                if (dataVencimento < dataFatura || dataVencimento < DateTime.Now || dataFatura < DateTime.Now) return RedirectToAction("Error", "Routing");
+                if (dataVencimento < dataFatura || dataVencimento < DateTime.Now || dataFatura < DateTime.Now)
+                {
+                    return RedirectToAction("Error", "Routing");
+                }
 
-                var newFatura = new Fatura(
+                Fatura newFatura = new Fatura(
                     dataFatura,
                     dataVencimento,
                     Convert.ToDecimal(faturaModel.Valor),
@@ -60,18 +70,24 @@ namespace CudellProject.Services.Controllers
             }
         }
 
-        [HttpPost("editFatura")]
+        [Microsoft.AspNetCore.Mvc.HttpPost("editFatura")]
         public async Task<IActionResult> EditFatura(EditFaturaViewModel faturaModel)
         {
             if (string.IsNullOrEmpty(faturaModel.EstadoFatura)
                 || string.IsNullOrEmpty(faturaModel.Fornecedor)
                 || faturaModel.FaturaID <= 0
-                || faturaModel.Valor <= 0.00) return BadRequest();
+                || faturaModel.Valor <= 0.00)
+            {
+                return BadRequest();
+            }
 
             Fornecedor fornecedor = await GetFornecedorByName(faturaModel.Fornecedor);
             EstadoFatura estadoFatura = await GetEstadoFaturaByName(faturaModel.EstadoFatura);
             Fatura oldFatura = await GetFaturaById(faturaModel.FaturaID);
-            if (fornecedor == null || estadoFatura == null || oldFatura == null) return NotFound();
+            if (fornecedor == null || estadoFatura == null || oldFatura == null)
+            {
+                return NotFound();
+            }
 
             try
             {
@@ -92,7 +108,7 @@ namespace CudellProject.Services.Controllers
         }
 
         // PUT: api/Fatura/5
-        [HttpPut("{id}")]
+        [Microsoft.AspNetCore.Mvc.HttpPut("{id}")]
         public async Task<IActionResult> PutFatura([FromRoute] long id, [FromBody] Fatura fatura)
         {
             _logger.LogInformation("FaturaController - PutFatura - Method Call");
@@ -134,7 +150,7 @@ namespace CudellProject.Services.Controllers
         }
 
         // POST: api/Fatura
-        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.HttpPost]
         public async Task<IActionResult> PostFatura([FromBody] Fatura fatura)
         {
             _logger.LogInformation("FaturaController - PostFatura - Method Call");
@@ -185,7 +201,7 @@ namespace CudellProject.Services.Controllers
                 .SingleOrDefaultAsync(m => m.FaturaID == id);
         }
 
-        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.HttpPost]
         public async Task<IActionResult> PostAudit([FromBody] Audit audit)
         {
             if (!ModelState.IsValid)
